@@ -10,6 +10,16 @@
 
 #include <pistache/serializer/rapidjson.h>
 
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
+
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+
+#include <mongocxx/client.hpp>
+#include <mongocxx/stdx.hpp>
+#include <mongocxx/uri.hpp>
+
 #include <json-c/json.h>
 
 #include "clara.hpp"
@@ -17,6 +27,12 @@
 using namespace std;
 using namespace Pistache;
 
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::open_document;
 
 using namespace clara;
 
@@ -80,17 +96,30 @@ class UmosapiService {
             auto versionPath = desc.path("/v1");
 
             versionPath
-                .route(desc.get("/:collections"))
+                .route(desc.get("/:mcollection"))
                 .bind(&UmosapiService::retrieveAll, this)
                 .produces(MIME(Application, Json))
-                .parameter<Rest::Type::String>("collection", "Name of the collection where the uobjects are located")
+                .parameter<Rest::Type::String>("mcollection", "Name of the collection where the uobjects are located")
                 .response(Http::Code::Ok, "List of uobjects")
                 .response(backendErrorResponse);
 
         }
 
-        void retrieveAll(const Rest::Request&, Http::ResponseWriter response) {
-            response.send(Http::Code::Ok, "No fucking objects");
+        void retrieveAll(const Rest::Request& request, Http::ResponseWriter response) {
+            mongocxx::client conn{mongocxx::uri{"mongodb://127.0.0.1:27017"}};
+
+            auto collection = conn["umosapi"][request.param(":mcollection").as<string>()];
+
+            auto cursor = collection.find({});
+
+            auto jsonObjects = json_object_new_array();
+
+            for (auto&& doc : cursor) {
+                json_object_array_add(jsonObjects, json_tokener_parse(bsoncxx::to_json(doc).c_str()));
+            }
+
+            response.send(Http::Code::Ok, json_object_to_json_string_ext(jsonObjects, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY), MIME(Application, Json));
+            json_object_put(jsonObjects);
         }
 
         std::shared_ptr<Http::Endpoint> httpEndpoint;

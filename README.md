@@ -12,6 +12,7 @@ Install:
 
 - Pistache
 - json-c
+- mongocxx
 
 # Build
 
