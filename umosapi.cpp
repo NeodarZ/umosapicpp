@@ -201,9 +201,9 @@ int main(int argc, char *argv[]) {
     int config_port = 9080;
     int thr = 2;
     auto cli = clara::detail::Help(showHelp)
-             | clara::detail::Opt( config_path, "config" )["-c"]["--config"]("Config file path. Default ")
-             | clara::detail::Opt( config_port, "port" )["-p"]["--port"]("Port to listen.")
-             | clara::detail::Opt( thr, "treads" )["-t"]["--threads"]("Number of threads.");
+             | clara::detail::Opt( config_path, "config" )["-c"]["--config"]("Config file path. Default `~/.config/umosapi/config.txt`.")
+             | clara::detail::Opt( config_port, "port" )["-p"]["--port"]("Port to listen. Default: `9080`.")
+             | clara::detail::Opt( thr, "treads" )["-t"]["--threads"]("Number of threads. Default: `2`.");
     auto result = cli.parse( clara::detail::Args( argc, argv ) );
     if( !result )
     {
