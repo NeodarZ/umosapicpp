@@ -22,7 +22,13 @@
 
 #include <json-c/json.h>
 
+#include <fstream>
+#include <nlohmann/json.hpp>
+
 #include "clara.hpp"
+#include "shared.h"
+
+std::map<std::string, std::string> config;
 
 using namespace std;
 using namespace Pistache;
@@ -34,12 +40,63 @@ using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::open_document;
 
+using json = nlohmann::json;
+
 using namespace clara;
 
 namespace Generic {
     void handleReady(const Rest::Request&, Http::ResponseWriter response) {
         response.send(Http::Code::Ok, "1");
     }
+}
+
+void load_config(string config_path) {
+std::ifstream is_file(config_path);
+    std::string line;
+    while( std::getline(is_file, line) )
+    {
+      std::istringstream is_line(line);
+      std::string key;
+      if( std::getline(is_line, key, '=') )
+      {
+          std::string value;
+          if( std::getline(is_line, value) )
+             config[key] = value;
+        }
+    }
+    is_file.close();
+
+    string mongoURI = "mongodb://";
+
+
+    if (config["mongo_db"] == "") {
+        config["mongo_db"] = "umosapi";
+    }
+
+    if (config["mongo_user"] != "") {
+        mongoURI.append(config["mongo_user"] + ":");
+    }
+
+    if (config["mongo_password"] != "") {
+        mongoURI.append(config["mongo_password"] + "@");
+    }
+
+    if (config["mongo_host"] == "") {
+        config["mongo_host"] = "127.0.0.1";
+    }
+    mongoURI.append(config["mongo_host"]);
+
+    if (config["mongo_port"] == "") {
+        config["mongo_port"] = "umosapi";
+    }
+    mongoURI.append(":" + config["mongo_port"]);
+
+    if (config["swaggerui"] == "") {
+        config["swaggerui"] = "/srv/http/swagger-ui";
+    }
+
+    config["mongoURI"] = mongoURI;
+
 }
 
 class UmosapiService {
@@ -106,9 +163,9 @@ class UmosapiService {
         }
 
         void retrieveAll(const Rest::Request& request, Http::ResponseWriter response) {
-            mongocxx::client conn{mongocxx::uri{"mongodb://127.0.0.1:27017"}};
+            mongocxx::client conn{mongocxx::uri{config["mongoURI"]}};
 
-            auto collection = conn["umosapi"][request.param(":mcollection").as<string>()];
+            auto collection = conn[config["mongo_db"]][request.param(":mcollection").as<string>()];
 
             auto cursor = collection.find({});
 
@@ -127,19 +184,6 @@ class UmosapiService {
         Rest::Router router;
 };
 
-std::string get_value(struct json_object *jobj, const char *key) {
-    struct json_object *tmp;
-
-
-    json_object_object_get_ex(jobj, key, &tmp);
-
-    if (jobj == NULL) {
-        cout << "get_value: Json object is null" << endl;
-        return "";
-    } else {
-        return json_object_get_string(tmp);
-    }
-}
 
 int main(int argc, char *argv[]) {
 
@@ -151,7 +195,7 @@ int main(int argc, char *argv[]) {
     }
 
     config_path.append(homedir);
-    config_path.append("/.config/umosapi/config.json");
+    config_path.append("/.config/umosapi/config.txt");
 
     bool showHelp = false;
     int config_port = 9080;
@@ -183,16 +227,17 @@ int main(int argc, char *argv[]) {
 
     if (!std::filesystem::exists(config_path)) {
         cout << "Error fatal : config file '" << config_path << "' not found" << endl;
-        cout << "config.json is search here: ~/.config/umosapi/config.json" << endl;
+        cout << "config.txt is search here: ~/.config/umosapi/config.txt" << endl;
         exit (EXIT_FAILURE);
     }
 
-    auto config = json_object_from_file(config_path.c_str());
+    load_config(config_path);
 
-    //cout << get_value(config, "swaggerui") << endl;
+    cout << "Using swaggerui " << config["swaggerui"] << " path" << endl;
+    cout << "Using mongoURI " << config["mongoURI"] << endl;
 
     UmosapiService umosapi(addr);
 
     umosapi.init(thr);
-    umosapi.start(get_value(config, "swaggerui"));
+    umosapi.start(config["swaggerui"]);
 }

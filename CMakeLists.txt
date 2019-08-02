@@ -9,6 +9,9 @@ include_directories(${LIBBSONCXX_INCLUDE_DIR})
 find_package(Pistache REQUIRED)
 include_directories(${Pistache_INCLUDE_DIR})
 
+find_package(nlohmann_json REQUIRED)
+include_directories(${JSON_INCLUDE_DIR})
+
 #find_package(Boost)
 
 find_package(Threads)
@@ -39,7 +42,8 @@ endif(NOT JSONC_FOUND)
 
 
 #add_executable(umosapi test.cpp)
-add_executable(umosapi umosapi.cpp)
+
+add_executable(umosapi umosapi.cpp shared.h)
 
 set_property(TARGET umosapi PROPERTY CXX_STANDARD 17)
 

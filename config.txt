@@ -1,0 +1,6 @@
+swaggerui=/home/neodarz/pro/immersens/unity_mongo_save_api/test_c/swagger-ui
+mongo_db=umosapi
+mongo_user=
+mongo_password=
+mongo_host=127.0.0.1
+mongo_port=27017

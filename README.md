@@ -12,7 +12,14 @@ Install:
 
 - Pistache
 - json-c
+- nlohmann/json
 - mongocxx
+
+### Why two json lib ?
+
+Because json-c is more fast than nlohmann/json when I do the test, json-c lib
+is only used for convert bson to json and vice versa. The nlohmann/json is
+only used for simplicty when loading config file.
 
 # Build
 
@@ -28,7 +35,7 @@ move `swagger-ui` where you want.
 
 # Configuration
 
-You can move example file in `~/.config/umosapi/config.json`.
+You can move example file in `~/.config/umosapi/config.txt`.
 
 The key `swaggerui` is the path of the `swagger-ui` folder.
 
