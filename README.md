@@ -35,9 +35,11 @@ move `swagger-ui` where you want.
 
 # Configuration
 
-You can move example file in `~/.config/umosapi/config.txt`.
+You can move the [example file](https://git.neodarz.net/pro/umosapicpp.git/tree/config.txt)
+in `~/.config/umosapi/config.txt`.
 
-The key `swaggerui` is the path of the `swagger-ui` folder.
+The key `swaggerui` is the path of the `swagger-ui` folder. The other keys
+speak by themself.
 
 # Documentation
 
