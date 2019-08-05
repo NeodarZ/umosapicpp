@@ -30,9 +30,9 @@ cmake ..
 make
 ```
 
-move `umosapi` binary where you want.
+move `<project_root>/build/umosapi` binary where you want.
 
-move `swagger-ui` folder where you want.
+move `<project_root>/swagger-ui` folder where you want.
 
 # Configuration
 
