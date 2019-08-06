@@ -5,6 +5,8 @@
 #include <pistache/description.h>
 #include <pistache/endpoint.h>
 
+#include <pistache/serializer/rapidjson.h>
+
 using namespace Pistache;
 
 class UmosapiService {

@@ -6,8 +6,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 
-#include <pistache/serializer/rapidjson.h>
-
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 
