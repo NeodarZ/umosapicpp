@@ -1,3 +1,4 @@
+#ifndef UmosapiService_H_
 #define UmosapiService_H_
 
 #include <pistache/http.h>
@@ -27,3 +28,4 @@ class UmosapiService {
         Rest::Description desc;
         Rest::Router router;
 };
+#endif
