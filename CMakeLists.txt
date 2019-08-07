@@ -41,8 +41,6 @@ or
 endif(NOT JSONC_FOUND)
 
 
-#add_executable(umosapi test.cpp)
-
 add_executable(umosapi main.cpp config.cpp api/umosapi.cpp api/umosapi.h config.h shared.h)
 
 set_property(TARGET umosapi PROPERTY CXX_STANDARD 17)
