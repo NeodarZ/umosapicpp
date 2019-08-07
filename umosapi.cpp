@@ -1,7 +1,6 @@
 #include "umosapi.h"
 
 #include <string.h>
-#include <filesystem>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -18,11 +17,11 @@
 
 #include <json-c/json.h>
 
-#include <fstream>
 #include <nlohmann/json.hpp>
 
 #include "clara.hpp"
 #include "shared.h"
+#include "config.h"
 
 std::map<std::string, std::string> config;
 
@@ -44,55 +43,6 @@ namespace Generic {
     void handleReady(const Rest::Request&, Http::ResponseWriter response) {
         response.send(Http::Code::Ok, "1");
     }
-}
-
-void load_config(string config_path) {
-std::ifstream is_file(config_path);
-    std::string line;
-    while( std::getline(is_file, line) )
-    {
-      std::istringstream is_line(line);
-      std::string key;
-      if( std::getline(is_line, key, '=') )
-      {
-          std::string value;
-          if( std::getline(is_line, value) )
-             config[key] = value;
-        }
-    }
-    is_file.close();
-
-    string mongoURI = "mongodb://";
-
-
-    if (config["mongo_db"] == "") {
-        config["mongo_db"] = "umosapi";
-    }
-
-    if (config["mongo_user"] != "") {
-        mongoURI.append(config["mongo_user"] + ":");
-    }
-
-    if (config["mongo_password"] != "") {
-        mongoURI.append(config["mongo_password"] + "@");
-    }
-
-    if (config["mongo_host"] == "") {
-        config["mongo_host"] = "127.0.0.1";
-    }
-    mongoURI.append(config["mongo_host"]);
-
-    if (config["mongo_port"] == "") {
-        config["mongo_port"] = "umosapi";
-    }
-    mongoURI.append(":" + config["mongo_port"]);
-
-    if (config["swaggerui"] == "") {
-        config["swaggerui"] = "/srv/http/swagger-ui";
-    }
-
-    config["mongoURI"] = mongoURI;
-
 }
 
 UmosapiService::UmosapiService(Address addr)
