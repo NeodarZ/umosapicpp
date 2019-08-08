@@ -18,6 +18,7 @@
 
 namespace uobject {
     std::string retrieveAll(std::string collection, struct json_object* jsonObjects);
+    std::string add(std::string collection, struct json_object* jsonObjects, const char * body);
 }
 
 #endif

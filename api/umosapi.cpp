@@ -115,58 +115,10 @@ void UmosapiService::retrieveAll(const Rest::Request& request, Http::ResponseWri
 }
 
 void UmosapiService::addUObject(const Rest::Request& request, Http::ResponseWriter response) {
-    mongocxx::client conn{mongocxx::uri{config["mongoURI"]}};
-
-    auto collection = conn[config["mongo_db"]][request.param(":mcollection").as<string>()];
-
-    auto document = bsoncxx::from_json(request.body().c_str());
-
-    auto result = collection.insert_one(document.view());
-
-    std::string oid = result->inserted_id().get_oid().value.to_string();
-
     auto jsonObject = json_object_new_object();
 
-    int stringlen = 0;
-    stringlen = strlen( request.body().c_str());
-    struct json_tokener *tok = json_tokener_new();
-    enum json_tokener_error jerr;
+    auto json_string = uobject::add(request.param(":mcollection").as<string>(), jsonObject,  request.body().c_str());
 
-    json_object *json_datas = NULL;
-
-    do {
-        json_datas = json_tokener_parse_ex(tok, request.body().c_str(), stringlen);
-    } while ((jerr = json_tokener_get_error(tok)) == json_tokener_continue);
-
-    if (jerr != json_tokener_success)
-    {
-        fprintf(stderr, "Error: %s\n", json_tokener_error_desc(jerr));
-    }
-
-    if (json_object_get_type(json_datas) == json_type_object) {
-        /* Create an object with the following template:
-            * {
-            *  "_id": {
-            *      "$oid": "5d484d371ec4865f767d8424"
-            *  },
-            *  "datas": {
-            *      [...]
-            *  }
-            * }
-        */
-
-        auto json_id = json_object_new_object();
-        auto json_oid = json_object_new_string(oid.c_str());
-
-        json_object_object_add(json_id, "$oid", json_oid);
-        json_object_object_add(jsonObject, "_id", json_id);
-        json_object_object_add(jsonObject, "datas", json_datas);
-    } else {
-        cout << typeid(json_datas).name() << endl;
-        cout << "json_datas type: " << json_type_to_name(json_object_get_type(json_datas)) << endl;
-    }
-    json_tokener_reset(tok);
-
-    response.send(Http::Code::Ok, json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY), MIME(Application, Json));
+    response.send(Http::Code::Ok, json_string, MIME(Application, Json));
     json_object_put(jsonObject);
 }
