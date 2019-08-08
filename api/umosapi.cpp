@@ -15,6 +15,7 @@
 #include "umosapi.h"
 #include "../shared.h"
 #include "../db/mongo_access.h"
+#include "../db/uobject.h"
 
 mongo_access mongo;
 
@@ -106,20 +107,11 @@ void UmosapiService::createDescription() {
 }
 
 void UmosapiService::retrieveAll(const Rest::Request& request, Http::ResponseWriter response) {
-    auto conn = mongo.get_connection();
-
-    auto collection = (*conn)[config["mongo_db"]][request.param(":mcollection").as<string>()];
-
-    auto cursor = collection.find({});
-
     auto jsonObjects = json_object_new_array();
-
-    for (auto&& doc : cursor) {
-        json_object_array_add(jsonObjects, json_tokener_parse(bsoncxx::to_json(doc).c_str()));
-    }
-
-    response.send(Http::Code::Ok, json_object_to_json_string_ext(jsonObjects, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY), MIME(Application, Json));
+    auto json_string = uobject::retrieveAll(request.param(":mcollection").as<string>(), jsonObjects);
     json_object_put(jsonObjects);
+
+    response.send(Http::Code::Ok, json_string, MIME(Application, Json));
 }
 
 void UmosapiService::addUObject(const Rest::Request& request, Http::ResponseWriter response) {

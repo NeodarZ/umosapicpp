@@ -41,7 +41,7 @@ or
 endif(NOT JSONC_FOUND)
 
 
-add_executable(umosapi main.cpp config.cpp api/umosapi.cpp db/mongo_access.cpp api/umosapi.h config.h db/mongo_access.h shared.h)
+add_executable(umosapi main.cpp config.cpp api/umosapi.cpp db/mongo_access.cpp db/uobject.cpp api/umosapi.h config.h db/mongo_access.h db/uobject.h shared.h)
 
 set_property(TARGET umosapi PROPERTY CXX_STANDARD 17)
 
