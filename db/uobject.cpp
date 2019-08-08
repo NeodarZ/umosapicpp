@@ -19,7 +19,7 @@ std::string uobject::retrieveAll(std::string collection, struct json_object* jso
 }
 
 std::string uobject::add(std::string collection, struct json_object* jsonObject, const char * body) {
-auto conn = mongo.get_connection();
+    auto conn = mongo.get_connection();
 
     auto coll = (*conn)[config["mongo_db"]][collection];
 
