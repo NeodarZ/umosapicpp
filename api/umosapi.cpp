@@ -14,6 +14,9 @@
 
 #include "umosapi.h"
 #include "../shared.h"
+#include "../db/mongo_access.h"
+
+mongo_access mongo;
 
 
 using bsoncxx::builder::stream::close_array;
@@ -40,6 +43,8 @@ UmosapiService::UmosapiService(Address addr)
 { }
 
 void UmosapiService::init(size_t thr = 2) {
+    auto uri = mongocxx::uri{config["mongoURI"]};
+    mongo.configure(std::move(uri));
     auto opts = Http::Endpoint::options()
         .threads(thr);
     httpEndpoint->init(opts);
@@ -101,9 +106,9 @@ void UmosapiService::createDescription() {
 }
 
 void UmosapiService::retrieveAll(const Rest::Request& request, Http::ResponseWriter response) {
-    mongocxx::client conn{mongocxx::uri{config["mongoURI"]}};
+    auto conn = mongo.get_connection();
 
-    auto collection = conn[config["mongo_db"]][request.param(":mcollection").as<string>()];
+    auto collection = (*conn)[config["mongo_db"]][request.param(":mcollection").as<string>()];
 
     auto cursor = collection.find({});
 
