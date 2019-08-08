@@ -1,5 +1,8 @@
 #include "uobject.h"
 
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
+
 std::string uobject::retrieveAll(std::string collection, struct json_object* jsonObjects) {
 
     auto conn = mongo.get_connection();
@@ -67,5 +70,35 @@ auto conn = mongo.get_connection();
     }
     json_tokener_reset(tok);
 
+    return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
+}
+
+std::string uobject::remove(std::string collection, std::string oid, struct json_object* jsonObject) {
+    auto conn = mongo.get_connection();
+
+    auto coll = (*conn)[config["mongo_db"]][collection];
+
+    auto result = coll.delete_one(make_document(kvp("_id", bsoncxx::oid(oid))));
+
+
+    if (result->deleted_count() > 0) {
+        /* Create an object with the following template:
+            * {
+            *  "_id": {
+            *      "$oid": "5d484d371ec4865f767d8424"
+            *  },
+            *  "datas": {
+            *      [...]
+            *  }
+            * }
+        */
+
+        auto json_id = json_object_new_object();
+        auto json_oid = json_object_new_string(oid.c_str());
+
+        json_object_object_add(json_id, "$oid", json_oid);
+        json_object_object_add(jsonObject, "_id", json_id);
+        json_object_object_add(jsonObject, "datas", {});
+    }
     return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
 }

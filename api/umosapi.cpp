@@ -104,6 +104,15 @@ void UmosapiService::createDescription() {
         .parameter<Rest::Type::String>("mcollection", "Name of the collection where the uobjects are located")
         .response(Http::Code::Ok, "Uobject created")
         .response(backendErrorResponse);
+
+    versionPath
+        .route(desc.del("/:mcollection/:oid"))
+        .bind(&UmosapiService::UmosapiService::deleteUObject, this)
+        .produces(MIME(Application, Json))
+        .parameter<Rest::Type::String>("mcollection", "Name of the collection where the uobjects are located")
+        .parameter<Rest::Type::String>("oid", "MongoDB oid of the uobject")
+        .response(Http::Code::Ok, "Uobject deleted")
+        .response(backendErrorResponse);
 }
 
 void UmosapiService::retrieveAll(const Rest::Request& request, Http::ResponseWriter response) {
@@ -121,4 +130,13 @@ void UmosapiService::addUObject(const Rest::Request& request, Http::ResponseWrit
 
     response.send(Http::Code::Ok, json_string, MIME(Application, Json));
     json_object_put(jsonObject);
+}
+
+void UmosapiService::deleteUObject(const Rest::Request& request, Http::ResponseWriter response) {
+
+    auto jsonObjet = json_object_new_object();
+
+    auto json_string = uobject::remove(request.param(":mcollection").as<string>(), request.param(":oid").as<string>(), jsonObjet);
+
+    response.send(Http::Code::Ok, json_string, MIME(Application, Json));
 }

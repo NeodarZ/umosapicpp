@@ -2,6 +2,9 @@
 #define Uobject_H_
 
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/oid.hpp>
+
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
@@ -19,6 +22,7 @@
 namespace uobject {
     std::string retrieveAll(std::string collection, struct json_object* jsonObjects);
     std::string add(std::string collection, struct json_object* jsonObjects, const char * body);
+    std::string remove(std::string collection, std::string oid, struct json_object* jsonObjects);
 }
 
 #endif

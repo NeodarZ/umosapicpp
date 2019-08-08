@@ -26,6 +26,8 @@ class UmosapiService {
 
         void addUObject(const Rest::Request& request, Http::ResponseWriter response);
 
+        void deleteUObject(const Rest::Request& request, Http::ResponseWriter response);
+
         std::shared_ptr<Http::Endpoint> httpEndpoint;
         Rest::Description desc;
         Rest::Router router;
