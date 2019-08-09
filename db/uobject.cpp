@@ -23,7 +23,11 @@ std::string uobject::add(std::string collection, struct json_object* jsonObject,
 
     auto coll = (*conn)[config["mongo_db"]][collection];
 
-    auto document = bsoncxx::from_json(body);
+    auto builder = bsoncxx::builder::stream::document{};
+
+    bsoncxx::document::value document = builder
+        << "datas" << bsoncxx::from_json(body)
+        << bsoncxx::builder::stream::finalize;
 
     auto result = coll.insert_one(document.view());
 
