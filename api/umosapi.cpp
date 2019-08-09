@@ -113,6 +113,16 @@ void UmosapiService::createDescription() {
         .parameter<Rest::Type::String>("oid", "MongoDB oid of the uobject")
         .response(Http::Code::Ok, "Uobject deleted")
         .response(backendErrorResponse);
+
+    versionPath
+        .route(desc.get("/:mcollection/:key/:value"))
+        .bind(&UmosapiService::UmosapiService::searchUObjectByKeyValue, this)
+        .produces(MIME(Application, Json))
+        .parameter<Rest::Type::String>("mcollection", "Name of the collection where the uobjects are located")
+        .parameter<Rest::Type::String>("key", "Key of uobject to search, ex.: kil or total.kill")
+        .parameter<Rest::Type::String>("value", "Value of uobject to search, ex.: 12")
+        .response(Http::Code::Ok, "Uobject found")
+        .response(backendErrorResponse);
 }
 
 void UmosapiService::retrieveAll(const Rest::Request& request, Http::ResponseWriter response) {
@@ -139,4 +149,13 @@ void UmosapiService::deleteUObject(const Rest::Request& request, Http::ResponseW
     auto json_string = uobject::remove(request.param(":mcollection").as<string>(), request.param(":oid").as<string>(), jsonObjet);
 
     response.send(Http::Code::Ok, json_string, MIME(Application, Json));
+}
+
+void UmosapiService::searchUObjectByKeyValue(const Rest::Request& request, Http::ResponseWriter response) {
+    auto jsonObject = json_object_new_array();
+
+    auto json_string = uobject::searchKeyValue(request.param(":mcollection").as<string>(), request.param(":key").as<string>(), request.param(":value").as<string>(), jsonObject);
+
+    response.send(Http::Code::Ok, json_string, MIME(Application, Json));
+    json_object_put(jsonObject);
 }

@@ -102,3 +102,25 @@ std::string uobject::remove(std::string collection, std::string oid, struct json
     }
     return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
 }
+
+std::string uobject::searchKeyValue(std::string collection, std::string key, std::string value, struct json_object* jsonArray) {
+    auto conn = mongo.get_connection();
+
+    auto coll = (*conn)[config["mongo_db"]][collection];
+
+    // Generate a string with the folowing format:
+    // {"datas.key":"value"}
+    std::string json_string = "{\"datas.";
+    json_string += key;
+    json_string += "\":\"";
+    json_string += value;
+    json_string += "\"}";
+
+    auto cursor = coll.find(bsoncxx::from_json(json_string));
+
+    for (auto&& doc : cursor) {
+        json_object_array_add(jsonArray, json_tokener_parse(bsoncxx::to_json(doc).c_str()));
+    }
+
+    return json_object_to_json_string_ext(jsonArray, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
+}
