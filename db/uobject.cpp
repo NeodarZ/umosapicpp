@@ -68,7 +68,7 @@ std::string uobject::add(std::string collection, struct json_object* jsonObject,
         std::cout << typeid(json_datas).name() << std::endl;
         std::cout << "json_datas type: " << json_type_to_name(json_object_get_type(json_datas)) << std::endl;
     }
-    json_tokener_reset(tok);
+    json_tokener_free(tok);
 
     return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
 }
