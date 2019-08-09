@@ -149,6 +149,7 @@ void UmosapiService::deleteUObject(const Rest::Request& request, Http::ResponseW
     auto json_string = uobject::remove(request.param(":mcollection").as<string>(), request.param(":oid").as<string>(), jsonObjet);
 
     response.send(Http::Code::Ok, json_string, MIME(Application, Json));
+    json_object_put(jsonObjet);
 }
 
 void UmosapiService::searchUObjectByKeyValue(const Rest::Request& request, Http::ResponseWriter response) {
