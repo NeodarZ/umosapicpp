@@ -144,12 +144,12 @@ void UmosapiService::addUObject(const Rest::Request& request, Http::ResponseWrit
 
 void UmosapiService::deleteUObject(const Rest::Request& request, Http::ResponseWriter response) {
 
-    auto jsonObjet = json_object_new_object();
+    auto jsonObject = json_object_new_object();
 
-    auto json_string = uobject::remove(request.param(":mcollection").as<string>(), request.param(":oid").as<string>(), jsonObjet);
+    auto json_string = uobject::remove(request.param(":mcollection").as<string>(), request.param(":oid").as<string>(), jsonObject);
 
     response.send(Http::Code::Ok, json_string, MIME(Application, Json));
-    json_object_put(jsonObjet);
+    json_object_put(jsonObject);
 }
 
 void UmosapiService::searchUObjectByKeyValue(const Rest::Request& request, Http::ResponseWriter response) {
