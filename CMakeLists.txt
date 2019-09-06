@@ -6,9 +6,6 @@ find_package(libbsoncxx REQUIRED)
 include_directories(${LIBMONGOCXX_INCLUDE_DIR})
 include_directories(${LIBBSONCXX_INCLUDE_DIR})
 
-find_package(Pistache REQUIRED)
-include_directories(${Pistache_INCLUDE_DIR})
-
 find_package(nlohmann_json REQUIRED)
 include_directories(${JSON_INCLUDE_DIR})
 
@@ -40,6 +37,30 @@ or
 /usr/local/lib")
 endif(NOT JSONC_FOUND)
 
+find_path(RESTBED_INCLUDE_DIRS restbed
+                           HINTS
+                           /usr/include/corvusoft/
+                           /usr/local/corvusoft/
+)
+find_library(RESTBED_LIBRARIES restbed
+                          HINTS
+                          /usr/lib/
+                          /usr/local/lib
+)
+
+find_package_handle_standard_args(restbed DEFAULT_MSG RESTBED_INCLUDE_DIRS RESTBED_LIBRARIES)
+
+if (NOT RESTBED_FOUND)
+message(FATAL_ERROR "restbed lib not found! Please check if headers files are in
+/usr/include/restbed/
+or
+/usr/local/include/restbed/
+Also please check that libs files ares in
+/usr/lib/
+or
+/usr/local/lib")
+endif(NOT RESTBED_FOUND)
+
 
 add_executable(umosapi main.cpp config.cpp api/umosapi.cpp db/mongo_access.cpp db/uobject.cpp api/umosapi.h config.h db/mongo_access.h db/uobject.h shared.h)
 
@@ -49,10 +70,10 @@ target_include_directories(umosapi PUBLIC ${LIBMONGOCXX_INCLUDE_DIRS})
 target_link_libraries(umosapi PUBLIC ${LIBBSONCXX_LIBRARIES})
 target_link_libraries(umosapi PUBLIC ${LIBMONGOCXX_LIBRARIES})
 
-target_link_libraries(umosapi PUBLIC ${Pistache_LIBRARIES}/libpistache.so)
-target_include_directories(umosapi PUBLIC ${Pistache_INCLUDE_DIRS})
-
 target_link_libraries(umosapi PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 target_include_directories(umosapi PUBLIC ${JSONC_INCLUDE_DIRS})
 target_link_libraries(umosapi PUBLIC ${JSONC_LIBRARIES})
+
+target_include_directories(umosapi PUBLIC ${RESTBED_INCLUDE_DIRS})
+target_link_libraries(umosapi PUBLIC ${RESTBED_LIBRARIES})

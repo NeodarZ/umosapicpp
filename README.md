@@ -1,8 +1,15 @@
 # UMoSApi
 
 This is a second implementation in C++ of the [Python](https://git.neodarz.net/pro/umosapi.git/about/)
-version of Unity Mongo Save Api. This is a simple API for save Unity object in
-Mongo database.
+version of Unity Mongo Save Api principally for speed issue. This is a simple
+API for save Unity object in Mongo database.
+
+In fact it was initially made for an Unity project but because of the
+simplicity of the API you can use with whatever you want. ;)
+
+/!\ WARNING: For the moment there is no authentifaction system! So don't use it
+over the internet or in an environment where unknow user can connect and also
+make sure your network is correctly securised.
 
 # Install
 
@@ -10,7 +17,7 @@ Mongo database.
 
 Install:
 
-- Pistache
+- Restbed
 - json-c
 - nlohmann/json
 - mongocxx
@@ -19,7 +26,8 @@ Install:
 
 Because json-c is more fast than nlohmann/json when I do the test, json-c lib
 is only used for convert bson to json and vice versa. The nlohmann/json is
-only used for simplicty when loading config file.
+only used for simplicty when loading config file and generate swagger.json
+file.
 
 # Build
 

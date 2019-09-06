@@ -103,8 +103,10 @@ std::string uobject::remove(std::string collection, std::string oid, struct json
         json_object_object_add(json_id, "$oid", json_oid);
         json_object_object_add(jsonObject, "_id", json_id);
         json_object_object_add(jsonObject, "datas", {});
+        return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
+    } else {
+        return "0";
     }
-    return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
 }
 
 std::string uobject::searchKeyValue(std::string collection, std::string key, std::string value, struct json_object* jsonArray) {
