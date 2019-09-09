@@ -12,8 +12,6 @@
 
 std::map<std::string, std::string> config;
 
-using namespace std;
-
 int main(int argc, char *argv[]) {
 
     string config_path = "";
@@ -73,7 +71,7 @@ int main(int argc, char *argv[]) {
     umosapi.start(config["swaggerui"]);
     */
 
-    UmosapiService umosapi;
+    UmosapiService::Api umosapi;
     umosapi.init();
     umosapi.start(std::stoi(config["port"]), thr);
 

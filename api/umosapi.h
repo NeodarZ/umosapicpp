@@ -16,6 +16,8 @@ using namespace std;
 
 using json = nlohmann::json;
 
+namespace UmosapiService {
+
 struct tag {
      std::string name;
      std::string description;
@@ -53,11 +55,11 @@ struct Paths {
     std::vector<Path> paths;
 };
 
-class UmosapiService {
+class Api {
     public:
 
-        UmosapiService();
-        virtual ~UmosapiService() {};
+        Api();
+        virtual ~Api() {};
 
         void init();
 
@@ -105,4 +107,5 @@ class UmosapiService {
         void swagger(std::string ui_path, std::string swagger_dir, std::string api_path);
 
 };
+}
 #endif

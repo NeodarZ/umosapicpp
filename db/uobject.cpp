@@ -3,7 +3,9 @@
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-std::string uobject::retrieveAll(std::string collection, struct json_object* jsonObjects) {
+UmosapiService::uobject::uobject() {}
+
+std::string UmosapiService::uobject::retrieveAll(std::string collection, struct json_object* jsonObjects) {
 
     auto conn = mongo.get_connection();
 
@@ -18,7 +20,7 @@ std::string uobject::retrieveAll(std::string collection, struct json_object* jso
     return json_object_to_json_string_ext(jsonObjects, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
 }
 
-std::string uobject::add(std::string collection, struct json_object* jsonObject, const char * body) {
+std::string UmosapiService::uobject::add(std::string collection, struct json_object* jsonObject, const char * body) {
     auto conn = mongo.get_connection();
 
     auto coll = (*conn)[config["mongo_db"]][collection];
@@ -77,7 +79,7 @@ std::string uobject::add(std::string collection, struct json_object* jsonObject,
     return json_object_to_json_string_ext(jsonObject, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY);
 }
 
-std::string uobject::remove(std::string collection, std::string oid, struct json_object* jsonObject) {
+std::string UmosapiService::uobject::remove(std::string collection, std::string oid, struct json_object* jsonObject) {
     auto conn = mongo.get_connection();
 
     auto coll = (*conn)[config["mongo_db"]][collection];
@@ -109,7 +111,7 @@ std::string uobject::remove(std::string collection, std::string oid, struct json
     }
 }
 
-std::string uobject::searchKeyValue(std::string collection, std::string key, std::string value, struct json_object* jsonArray) {
+std::string UmosapiService::uobject::searchKeyValue(std::string collection, std::string key, std::string value, struct json_object* jsonArray) {
     auto conn = mongo.get_connection();
 
     auto coll = (*conn)[config["mongo_db"]][collection];
