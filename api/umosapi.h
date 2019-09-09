@@ -1,20 +1,9 @@
 #ifndef UmosapiService_H_
 #define UmosapiService_H_
 
-//#include <pistache/http.h>
-//#include <pistache/description.h>
-//#include <pistache/endpoint.h>
-
 #include <restbed>
 
-//#include <pistache/serializer/rapidjson.h>
-
 #include <nlohmann/json.hpp>
-
-using namespace restbed;
-using namespace std;
-
-using json = nlohmann::json;
 
 namespace UmosapiService {
 
@@ -64,30 +53,30 @@ class Api {
         void init();
 
         void start(int, int);
-        Service _service;
-        json _swagger;
-        vector<tag> _tags;
+        restbed::Service _service;
+        nlohmann::json _swagger;
+        std::vector<tag> _tags;
 
     private:
-        void desc(std::string route, std::string http_word, const std::function< void ( const std::shared_ptr< Session > ) >& callback, const std::function< void(int, const std::exception&, std::shared_ptr<restbed::Session>) >& error_callback, tag tags[]);
+        void desc(std::string route, std::string http_word, const std::function< void ( const std::shared_ptr< restbed::Session > ) >& callback, const std::function< void(int, const std::exception&, std::shared_ptr< restbed::Session >) >& error_callback, tag tags[]);
         void createResource();
 
-        static void retrieveAll( const shared_ptr<Session> session );
-        static void addUObject( const shared_ptr<Session> session );
-        static void deleteUObject( const shared_ptr<Session> session );
-        static void searchUObjectByKeyValue( const shared_ptr<Session> session );
-        static void swaggerEndpoint( const shared_ptr<Session> session );
-        static void swaggerEndpointResources( const shared_ptr<Session> session );
-        static void swaggerEndpointApi( const shared_ptr<Session> session );
+        static void retrieveAll( const std::shared_ptr< restbed::Session > session );
+        static void addUObject( const std::shared_ptr< restbed::Session > session );
+        static void deleteUObject( const std::shared_ptr< restbed::Session > session );
+        static void searchUObjectByKeyValue( const std::shared_ptr< restbed::Session > session );
+        static void swaggerEndpoint( const std::shared_ptr< restbed::Session > session );
+        static void swaggerEndpointResources( const std::shared_ptr< restbed::Session > session );
+        static void swaggerEndpointApi( const std::shared_ptr< restbed::Session > session );
 
-        shared_ptr< Resource> _resource;
+        std::shared_ptr< restbed::Resource> _resource;
         Definition _definition;
         Definitions _definitions;
         Path _path;
         Paths _paths;
         void set_path();
         void set_path(std::string route);
-        void set_method_handler(std::string http_word, const std::function< void ( const std::shared_ptr< Session > ) >& callback);
+        void set_method_handler(std::string http_word, const std::function< void ( const std::shared_ptr< restbed::Session > ) >& callback);
         void set_error_handler(const std::function< void(int, const std::exception&, std::shared_ptr<restbed::Session>) >& error_callback);
         void produce(std::string);
         void consume(std::string);

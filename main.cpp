@@ -8,13 +8,12 @@
 #include "config.h"
 #include "api/umosapi.h"
 
-#include "service.hpp"
 
 std::map<std::string, std::string> config;
 
 int main(int argc, char *argv[]) {
 
-    string config_path = "";
+    std::string config_path = "";
     const char *homedir;
 
     if ((homedir = getenv("XDG_CONFIG_HOME")) == NULL || (homedir = getenv("HOME")) == NULL) {
@@ -44,32 +43,23 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    //Address addr(Ipv4::any(), Port(config["port"]));
+    std::cout << "INFO: Using " << std::thread::hardware_concurrency() << " cores";
+    std::cout << " - " << thr << " threads" << std::endl;
+    std::cout << "INFO: Listen on 0.0.0.0:" << config["port"] << std::endl;
 
-    cout << "INFO: Using " << std::thread::hardware_concurrency() << " cores";
-    cout << " - " << thr << " threads" << endl;
-    cout << "INFO: Listen on 0.0.0.0:" << config["port"] << endl;
-
-    cout << "INFO: Using config file '" << config_path << "'" << endl;
+    std::cout << "INFO: Using config file '" << config_path << "'" << std::endl;
 
     if (!std::filesystem::exists(config_path)) {
-        cout << "ERROR: Error fatal : config file '" << config_path << "' not found" << endl;
-        cout << "ERROR: config.txt is search here: ~/.config/umosapi/config.txt" << endl;
+        std::cout << "ERROR: Error fatal : config file '" << config_path << "' not found" << std::endl;
+        std::cout << "ERROR: config.txt is search here: ~/.config/umosapi/config.txt" << std::endl;
         exit (EXIT_FAILURE);
     }
 
     load_config(config_path);
 
-    //cout << "Using swaggerui " << config["swaggerui"] << " path" << endl;
-    cout << "INFO: No support for swagger for the moment" << endl;
-    cout << "INFO: Using mongoURI " << config["mongoURI"] << endl;
-    /*
-
-    UmosapiService umosapi(addr);
-
-    umosapi.init(thr);
-    umosapi.start(config["swaggerui"]);
-    */
+    std::cout << "Using swaggerui " << config["swaggerui"] << " path" << std::endl;
+    std::cout << "INFO: No support for swagger for the moment" << std::endl;
+    std::cout << "INFO: Using mongoURI " << config["mongoURI"] << std::endl;
 
     UmosapiService::Api umosapi;
     umosapi.init();
