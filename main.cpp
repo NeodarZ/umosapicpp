@@ -77,4 +77,6 @@ int main(int argc, char *argv[]) {
     umosapi.init();
     umosapi.start(std::stoi(config["port"]), thr);
 
+    return EXIT_SUCCESS;
+
 }

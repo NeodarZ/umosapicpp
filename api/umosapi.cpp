@@ -63,8 +63,11 @@ void service_error_handler( const int, const exception& e, const shared_ptr< Ses
 {
     std::string message = "Backend Service is dead: ";
     message += e.what();
-    if ( session->is_open( ) )
-        session->close( 500, message, { { "Content-Length", ::to_string(message.length()) } } );
+    if ( session ) {
+        if ( session->is_open( ) ) {
+            session->close( 500, message, { { "Content-Length", ::to_string(message.length()) } } );
+        }
+    }
     fprintf( stderr, "ERROR: %s.\n", message.c_str() );
 }
 
@@ -274,12 +277,12 @@ void UmosapiService::createResource() {
     set_method_handler("GET", retrieveAll);
     produce("application/json");
     parameter("mcollection", "Name of the collection where the uobject are located");
-    set_error_handler(resource_error_handler);
+    set_error_handler(&resource_error_handler);
     set_method_handler("POST", addUObject);
     consume("application/json");
     parameter("mcollection", "Name of the collection where the uobject are located");
     parameter("body", "UObject to add", "UObjectSended");
-    set_error_handler(resource_error_handler);
+    set_error_handler(&resource_error_handler);
     publish();
 
     set_path("/v2/{mcollection: .*}/{oid: .*}");
@@ -287,7 +290,7 @@ void UmosapiService::createResource() {
     produce("application/json");
     parameter("mcollection", "Name of the collection where the uobject are located" );
     parameter("oid", "MongoDB oid of the uobject");
-    set_error_handler(resource_error_handler);
+    set_error_handler(&resource_error_handler);
     publish();
 
     set_path("/v2/{mcollection: .*}/{key: .*}/{value: .*}");
@@ -296,7 +299,7 @@ void UmosapiService::createResource() {
     parameter("mcollection", "Name of the collection where the uobject are located");
     parameter("key", "Key of uobject to search, ex: kill or total.kill");
     parameter("value", "Value of uobject to search, ex: 42");
-    set_error_handler(resource_error_handler);
+    set_error_handler(&resource_error_handler);
     publish();
 
     _service.set_error_handler( service_error_handler );
@@ -306,12 +309,13 @@ void UmosapiService::retrieveAll( const shared_ptr<Session> session ){
     auto jsonObjects = json_object_new_array();
     const auto& request = session->get_request( );
     auto json_string = uobject::retrieveAll(request->get_path_parameter( "mcollection" ), jsonObjects);
-    json_object_put(jsonObjects);
 
     session->close( OK, json_string, {
         { "Content-Length", ::to_string(json_string.length()) },
         { "Content-Type", "application/json" } 
     });
+    json_object_put(jsonObjects);
+
 }
 
 void UmosapiService::addUObject( const shared_ptr<Session> session ){
