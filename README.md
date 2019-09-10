@@ -17,7 +17,7 @@ make sure your network is correctly securised.
 
 Install:
 
-- Pistache
+- Restbed
 - json-c
 - nlohmann/json
 - mongocxx
@@ -26,7 +26,8 @@ Install:
 
 Because json-c is more fast than nlohmann/json when I do the test, json-c lib
 is only used for convert bson to json and vice versa. The nlohmann/json is
-only used for simplicty when loading config file.
+only used for simplicty when loading config file and generate swagger.json
+file.
 
 # Build
 

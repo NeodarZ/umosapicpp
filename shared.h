@@ -5,6 +5,6 @@
 #include "db/mongo_access.h"
 
 extern std::map<std::string, std::string> config;
-extern mongo_access mongo;
+extern UmosapiService::mongo_access mongo;
 
 #endif

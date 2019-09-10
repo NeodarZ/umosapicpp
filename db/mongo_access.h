@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-
+namespace UmosapiService {
 class mongo_access {
     public:
 
@@ -39,5 +39,6 @@ class mongo_access {
         std::unique_ptr<mongocxx::pool> _pool = nullptr;
 
 };
+}
 
 #endif

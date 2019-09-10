@@ -19,11 +19,19 @@
 #include "../shared.h"
 #include "../db/mongo_access.h"
 
-namespace uobject {
+namespace UmosapiService {
+
+class uobject {
+    public:
+
+    uobject();
+    virtual ~uobject() {};
+
     std::string retrieveAll(std::string collection, struct json_object* jsonObjects);
     std::string add(std::string collection, struct json_object* jsonObjects, const char * body);
     std::string remove(std::string collection, std::string oid, struct json_object* jsonObjects);
     std::string searchKeyValue(std::string collection, std::string key, std::string value, struct json_object* jsonArray);
-}
+};
 
+}
 #endif
