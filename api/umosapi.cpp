@@ -146,9 +146,7 @@ void UmosapiService::Api::set_path(std::string route) {
 void UmosapiService::Api::set_method_handler(std::string http_word, const std::function< void ( const std::shared_ptr< restbed::Session > ) >& callback) {
     UmosapiService::Api::_resource->set_method_handler(http_word, callback);
     std::locale loc;
-    for (auto& c : http_word) {
-        c = tolower(c);
-    }
+    for (auto& c : http_word) { c = tolower(c); }
     UmosapiService::Api::_path.words.push_back(HttpWord{http_word});
     UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][http_word]["description"] = "";
     UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][http_word]["operationId"] = "";
@@ -160,7 +158,7 @@ void UmosapiService::Api::set_error_handler(const std::function< void(int, const
 }
 
 void UmosapiService::Api::publish() {
-    for (auto& http_word: UmosapiService::Api::_path.words) {
+    for (const auto& http_word: UmosapiService::Api::_path.words) {
         auto responses = UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][http_word.name]["responses"];
         if (responses.find("200") == responses.end()) {
             UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][http_word.name]["responses"]["200"]["description"] = "All is fine.";
@@ -202,7 +200,7 @@ void UmosapiService::Api::parameter(std::string name, std::string description, s
         parameter["in"] = "path";
     } else {
         parameter["in"] = "body";
-        for (auto& def: UmosapiService::Api::_definitions.defs) {
+        for (const auto& def: UmosapiService::Api::_definitions.defs) {
             if (def.name == schema ) {
                 std::string schema_path = "#/definitions/";
                 parameter["schema"]["$ref"] = schema_path.append(schema);

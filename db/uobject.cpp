@@ -13,7 +13,7 @@ std::string UmosapiService::uobject::retrieveAll(std::string collection, struct 
 
     auto cursor = coll.find({});
 
-    for (auto&& doc : cursor) {
+    for (const auto& doc : cursor) {
         json_object_array_add(jsonObjects, json_tokener_parse(bsoncxx::to_json(doc).c_str()));
     }
 
@@ -126,7 +126,7 @@ std::string UmosapiService::uobject::searchKeyValue(std::string collection, std:
 
     auto cursor = coll.find(bsoncxx::from_json(json_string));
 
-    for (auto&& doc : cursor) {
+    for (const auto& doc : cursor) {
         json_object_array_add(jsonArray, json_tokener_parse(bsoncxx::to_json(doc).c_str()));
     }
 
