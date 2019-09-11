@@ -175,8 +175,14 @@ void UmosapiService::Api::definition(std::string name, std::string type) {
 
 void UmosapiService::Api::propertie(std::string name, std::string format, std::string type, std::string required) {
     UmosapiService::Api::_definition.props.push_back(Propertie{name, format, type, required});
-    UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["format"] = format;
-    UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["type"] = type;
+    if (type == "ref") {
+        UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["type"] = "array";
+        std::string schema_path = "#/definitions/";
+        UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["items"]["$ref"] = schema_path.append(name);
+    } else {
+        UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["format"] = format;
+        UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["type"] = type;
+    }
     if (required == "true") {
         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["required"].push_back(name);
     }
