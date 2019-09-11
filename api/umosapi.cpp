@@ -264,8 +264,8 @@ void UmosapiService::Api::createResource() {
     UmosapiService::Api::scheme("https");
 
     UmosapiService::Api::definition("UObject", "object");
-    UmosapiService::Api::propertie("id", "int64", "integer", "true");
-    UmosapiService::Api::propertie("value", "string", "object", "true");
+    UmosapiService::Api::propertie("_id", "mongoid", "object", "true");
+    UmosapiService::Api::propertie("datas", "string", "object", "true");
 
     UmosapiService::Api::definition("UObjectSended", "object");
 
