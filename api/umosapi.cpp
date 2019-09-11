@@ -179,6 +179,9 @@ void UmosapiService::Api::propertie(std::string name, std::string format, std::s
         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["type"] = "array";
         std::string schema_path = "#/definitions/";
         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["items"]["$ref"] = schema_path.append(name);
+    } else if (format == "mongoid") {
+         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["type"] = "object";
+         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["properties"]["$oid"][type] = "string";
     } else {
         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["format"] = format;
         UmosapiService::Api::_swagger["definitions"][UmosapiService::Api::_definition.name]["properties"][name]["type"] = type;
