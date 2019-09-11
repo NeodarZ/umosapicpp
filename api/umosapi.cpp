@@ -276,6 +276,8 @@ void UmosapiService::Api::createResource() {
     UmosapiService::Api::set_path("/v2/ready");
     UmosapiService::Api::set_method_handler("GET", is_ready);
     UmosapiService::Api::produce("application/json");
+    UmosapiService::Api::response("200", "All is fine");
+    UmosapiService::Api::response("500", "Backend is dead");
     UmosapiService::Api::publish();
 
     UmosapiService::Api::set_path("/v2/{mcollection: .*}");
@@ -283,12 +285,14 @@ void UmosapiService::Api::createResource() {
     UmosapiService::Api::produce("application/json");
     UmosapiService::Api::parameter("mcollection", "Name of the collection where the uobject are located");
     UmosapiService::Api::response("200", "All is fine", "UObject", "array");
+    UmosapiService::Api::response("500", "Backend is dead");
     UmosapiService::Api::set_error_handler(&resource_error_handler);
     UmosapiService::Api::set_method_handler("POST", addUObject);
     UmosapiService::Api::consume("application/json");
     UmosapiService::Api::parameter("mcollection", "Name of the collection where the uobject are located");
     UmosapiService::Api::parameter("body", "UObject to add", "UObjectSended");
     UmosapiService::Api::response("200", "All is fine", "UObject");
+    UmosapiService::Api::response("500", "Backend is dead");
     UmosapiService::Api::set_error_handler(&resource_error_handler);
     UmosapiService::Api::publish();
 
@@ -298,6 +302,7 @@ void UmosapiService::Api::createResource() {
     UmosapiService::Api::parameter("mcollection", "Name of the collection where the uobject are located" );
     UmosapiService::Api::parameter("oid", "MongoDB oid of the uobject");
     UmosapiService::Api::response("200", "All is fine", "UObject");
+    UmosapiService::Api::response("500", "Backend is dead");
     UmosapiService::Api::set_error_handler(&resource_error_handler);
     UmosapiService::Api::publish();
 
@@ -308,6 +313,7 @@ void UmosapiService::Api::createResource() {
     UmosapiService::Api::parameter("key", "Key of uobject to search, ex: kill or total.kill");
     UmosapiService::Api::parameter("value", "Value of uobject to search, ex: 42");
     UmosapiService::Api::response("200", "All is fine", "UObject");
+    UmosapiService::Api::response("500", "Backend is dead");
     UmosapiService::Api::set_error_handler(&resource_error_handler);
     UmosapiService::Api::publish();
 
