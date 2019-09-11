@@ -81,7 +81,7 @@ class Api {
         void produce(std::string);
         void consume(std::string);
         void parameter(std::string, std::string, std::string);
-        void response(std::string err_code, std::string description, std::string schema);
+        void response(std::string err_code, std::string description, std::string schema, std::string type);
         void publish();
         void basePath(std::string basePath);
         void description(std::string description);

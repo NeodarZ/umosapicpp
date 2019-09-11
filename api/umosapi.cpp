@@ -210,11 +210,16 @@ void UmosapiService::Api::parameter(std::string name, std::string description, s
     UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["parameters"].push_back(parameter);
 }
 
-void UmosapiService::Api::response(std::string http_code, std::string description, std::string definition) {
+void UmosapiService::Api::response(std::string http_code, std::string description, std::string definition, std::string type = "object") {
     std::string schema = "#/definitions/";
-    UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["description"] = description;
-    UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["schema"]["items"]["$ref"] = schema.append(definition);
-    UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["schema"]["type"] = "array";
+    if (type == "object") {
+        UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["description"] = description;
+        UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["schema"]["$ref"] = schema.append(definition);
+    } else {
+        UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["description"] = description;
+        UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["schema"]["items"]["$ref"] = schema.append(definition);
+        UmosapiService::Api::_swagger["paths"][UmosapiService::Api::_path.name][UmosapiService::Api::_path.words.back().name]["responses"][http_code]["schema"]["type"] = type;
+    }
 }
 
 void UmosapiService::Api::swagger(std::string ui_path, std::string swagger_dir, std::string api_path) {
