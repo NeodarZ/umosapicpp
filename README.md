@@ -52,4 +52,4 @@ speak by themself.
 
 # Documentation
 
-Juste launch `umosapi` and go here: [http://127.0.0.1:9080/doc](http://127.0.0.1:9080/doc)
+Juste launch `umosapi` and go here: [http://127.0.0.1:9080/doc/](http://127.0.0.1:9080/doc/)
