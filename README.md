@@ -21,6 +21,7 @@ Install:
 - json-c
 - nlohmann/json
 - mongocxx
+- spdlog
 
 ### Why two json lib ?
 

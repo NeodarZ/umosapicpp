@@ -4,7 +4,9 @@
 #include <pwd.h>
 
 #include "clara.hpp"
+
 #include "shared.h"
+#include "logging.h"
 #include "config.h"
 #include "api/umosapi.h"
 
@@ -43,23 +45,22 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    std::cout << "INFO: Using " << std::thread::hardware_concurrency() << " cores";
-    std::cout << " - " << thr << " threads" << std::endl;
-    std::cout << "INFO: Listen on 0.0.0.0:" << config["port"] << std::endl;
+    spdlog::info("Using {} cores - {} threads", std::thread::hardware_concurrency(), thr);
+    spdlog::info("Listen on 0.0.0.0:{}", config["port"]);
 
-    std::cout << "INFO: Using config file '" << config_path << "'" << std::endl;
+    spdlog::info("Using config file '{}'", config_path);
 
     if (!std::filesystem::exists(config_path)) {
-        std::cout << "ERROR: Error fatal : config file '" << config_path << "' not found" << std::endl;
-        std::cout << "ERROR: config.txt is search here: ~/.config/umosapi/config.txt" << std::endl;
+        spdlog::error("Error fatal: config file '{}' not found", config_path);
+        spdlog::error("config.txt is searched here: ~/.config/umosapi.config.txt");
         exit (EXIT_FAILURE);
     }
 
     load_config(config_path);
 
-    std::cout << "Using swaggerui " << config["swaggerui"] << " path" << std::endl;
-    std::cout << "INFO: No support for swagger for the moment" << std::endl;
-    std::cout << "INFO: Using mongoURI " << config["mongoURI"] << std::endl;
+    spdlog::info("Using swaggerui {} path", config["swaggerui"]);
+    spdlog::warn("No support for swagger for the moment");
+    spdlog::info("Using mongoURI {}", config["mongoURI"]);
 
     UmosapiService::Api umosapi;
     umosapi.init();

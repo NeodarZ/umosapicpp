@@ -61,8 +61,11 @@ or
 /usr/local/lib")
 endif(NOT RESTBED_FOUND)
 
+if(NOT TARGET spdlog)
+    find_package(spdlog REQUIRED)
+endif()
 
-add_executable(umosapi main.cpp config.cpp api/umosapi.cpp db/mongo_access.cpp db/uobject.cpp api/umosapi.h config.h db/mongo_access.h db/uobject.h shared.h)
+add_executable(umosapi main.cpp config.cpp api/umosapi.cpp db/mongo_access.cpp db/uobject.cpp api/umosapi.h config.h db/mongo_access.h db/uobject.h shared.h logging.h)
 
 set_property(TARGET umosapi PROPERTY CXX_STANDARD 17)
 
@@ -77,3 +80,5 @@ target_link_libraries(umosapi PUBLIC ${JSONC_LIBRARIES})
 
 target_include_directories(umosapi PUBLIC ${RESTBED_INCLUDE_DIRS})
 target_link_libraries(umosapi PUBLIC ${RESTBED_LIBRARIES})
+
+target_link_libraries(umosapi PUBLIC spdlog::spdlog)
